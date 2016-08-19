@@ -20,7 +20,11 @@ class NotificationTmpImageRepository {
     func saveImage(from url: URL, imageName: String, completion: @escaping (_ savedUrl: URL?) -> Void) {
         let request = URLRequest(url: url)
         let task = session.dataTask(with: request, completionHandler: { [weak self](data, response, error) in
-            guard let strongSelf = self else { return }
+            guard let strongSelf = self else {
+                completion(nil)
+                return
+            }
+            
             let saveUrl = strongSelf.createFileUrl(with: imageName)
             do {
                 try data?.write(to: saveUrl)
