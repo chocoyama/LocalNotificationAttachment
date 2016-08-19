@@ -56,7 +56,7 @@ class ViewController: UIViewController {
             
             UNUserNotificationCenter.current().add(request, withCompletionHandler: { [weak self] (error) in
                 if let savedUrl = savedUrl {
-                    self?.repository.deleteImage(from: savedUrl)
+                    self?.repository.deleteImage(at: savedUrl)
                 }
             })
         })

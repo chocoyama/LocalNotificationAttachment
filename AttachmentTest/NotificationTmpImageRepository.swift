@@ -17,23 +17,23 @@ class NotificationTmpImageRepository {
         return session
     }()
     
-    func saveImage(from url: URL, imageName: String, completion: (savedUrl: URL?) -> Void) {
+    func saveImage(from url: URL, imageName: String, completion: @escaping (_ savedUrl: URL?) -> Void) {
         let request = URLRequest(url: url)
         let task = session.dataTask(with: request, completionHandler: { [weak self](data, response, error) in
             guard let strongSelf = self else { return }
             let saveUrl = strongSelf.createFileUrl(with: imageName)
             do {
                 try data?.write(to: saveUrl)
-                completion(savedUrl: saveUrl)
+                completion(saveUrl)
             } catch let error {
                 print(error)
-                completion(savedUrl: nil)
+                completion(nil)
             }
         })
         task.resume()
     }
     
-    func getImage(from url: URL) -> UIImage? {
+    func getImage(at url: URL) -> UIImage? {
         do {
             let data = try Data(contentsOf: url)
             let image = UIImage(data: data)
@@ -44,7 +44,7 @@ class NotificationTmpImageRepository {
         }
     }
     
-    func deleteImage(from url: URL) -> Bool {
+    func deleteImage(at url: URL) -> Bool {
         do {
             try FileManager.default.removeItem(at: url)
             return true
